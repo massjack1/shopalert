@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://shopalert-99a3a-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -14,6 +14,8 @@ const inputFieldEl = document.getElementById("input-field");
 const addButtonEl = document.getElementById("add-button");
 const shopListEl = document.getElementById("shop-list");
 
+let itemsArray = [];
+
 addButtonEl.addEventListener("click", function() {
     let inputValue = inputFieldEl.value
 
@@ -21,11 +23,32 @@ addButtonEl.addEventListener("click", function() {
 
     clearInputFieldEl()
 
-    appendItemToShopListEl(inputValue)
 })
+onValue(shopalertInDB, function(snapshot) {
+    const data = snapshot.val();
+    if (data) {
+        itemsArray = Object.values(data); // Update the local array
+    } else {
+        itemsArray = []; // If there's no data, reset the local array
+    }
+
+    clearShopListEl();
+    renderShopList(); // Update the DOM
+});
+
+
+function clearShopListEl() {
+    shopListEl.innerHTML = ""
+}
 
 function clearInputFieldEl() {
     inputFieldEl.value = ""
+}
+
+function renderShopList() {
+    for (let i = 0; i < itemsArray.length; i++) {
+        appendItemToShopListEl(itemsArray[i]);
+    }
 }
 
 function appendItemToShopListEl(itemValue) {
