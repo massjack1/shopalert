@@ -27,7 +27,7 @@ addButtonEl.addEventListener("click", function() {
 onValue(shopalertInDB, function(snapshot) {
     const data = snapshot.val();
     if (data) {
-        itemsArray = Object.values(data); // Update the local array
+        itemsArray = Object.entries(data); // Update the local array
     } else {
         itemsArray = []; // If there's no data, reset the local array
     }
@@ -47,10 +47,21 @@ function clearInputFieldEl() {
 
 function renderShopList() {
     for (let i = 0; i < itemsArray.length; i++) {
-        appendItemToShopListEl(itemsArray[i]);
+        let currentItem = itemsArray[i]
+        let currentItemID = currentItem[0]
+        let currentItemValue = currentItem[1]
+
+        appendItemToShopListEl(currentItem);
     }
 }
 
-function appendItemToShopListEl(itemValue) {
-    shopListEl.innerHTML += `<li>${itemValue}</li>`
+function appendItemToShopListEl(item) {
+    let itemID = item[0]
+    let itemValue = item[1]
+
+    let newEl = document.createElement("li")
+
+    newEl.textContent = itemValue
+
+    shopListEl.append(newEl)
 }
