@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://shopalert-99a3a-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -60,6 +60,12 @@ function appendItemToShopListEl(item) {
     let itemValue = item[1]
 
     let newEl = document.createElement("li")
+
+    newEl.addEventListener("click", function() {
+        let specifiedItemLocationInDB = ref(database, `shoplist/${itemID}`)
+
+        remove(specifiedItemLocationInDB)
+    })
 
     newEl.textContent = itemValue
 
