@@ -25,16 +25,22 @@ addButtonEl.addEventListener("click", function() {
 
 })
 onValue(shopalertInDB, function(snapshot) {
-    const data = snapshot.val();
-    if (data) {
-        itemsArray = Object.entries(data); // Update the local array
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+        itemsArray = Object.entries(data);
     } else {
-        itemsArray = []; // If there's no data, reset the local array
+        itemsArray = [];
     }
 
     clearShopListEl();
-    renderShopList(); // Update the DOM
+    if (itemsArray.length > 0) {
+        renderShopList();
+    } else {
+        // Display a message when there are no items in the database
+        shopListEl.textContent = 'No items here...';
+    }
 });
+
 
 
 function clearShopListEl() {
